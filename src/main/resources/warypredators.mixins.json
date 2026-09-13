@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.crowsambit.warypredators.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "PredatorAiMixin",
+    "PredatorBreakOffMixin",
+    "PrepareRamMixin"
+  ],
+  "client": [],
+  "server": []
+}

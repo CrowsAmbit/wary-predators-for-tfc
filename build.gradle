@@ -1,0 +1,172 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.142'
+    id 'idea'
+}
+
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+version = mod_version
+group = mod_group_id
+
+sourceSets.main.resources {
+    srcDir('src/generated/resources')
+    exclude("**/*.bbmodel")
+    exclude("src/generated/**/.cache")
+}
+
+repositories {
+    // Add here additional repositories if required by some of the dependencies below.
+    // If your burnttfc build.gradle already has a repo declared for TFC's own maven, you
+    // likely don't need this for warypredators since we depend on a local jar instead - but
+    // add it here too if you'd rather pull TFC as a real maven dependency.
+    flatDir {
+        dirs 'libs'
+    }
+    // CurseMaven - used to pull Cloth Config as a compile-only, OPTIONAL dependency so the
+    // settings screen can offer the Cloth-backed UI when Cloth is installed at runtime.
+    // Safe to remove along with the cloth dependency below if you drop Cloth integration.
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "CurseMaven"
+                url = "https://cursemaven.com"
+            }
+        }
+        filter { includeGroup "curse.maven" }
+    }
+}
+
+base {
+    archivesName = mod_id
+}
+
+// Mojang ships Java 21 to end users in 1.21.1, so mods should target Java 21.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        gameTestServer {
+            type = "gameTestServer"
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+dependencies {
+    // TFC on the compile classpath only - we mixin into its classes, but at runtime TFC
+    // is provided by the modpack itself, so we don't want to bundle or re-ship it.
+    // Drop the jar you're building against into ./libs/ (see gradle.properties for the
+    // expected filename), matching whatever TFC build burnttfc currently compiles against.
+    def tfcJar = file("libs/${tfc_jar_name}")
+    if (!tfcJar.exists()) {
+        throw new GradleException(
+            "TFC jar not found at ${tfcJar}.\n" +
+            "  Drop your TerraFirmaCraft jar into the libs/ folder and make sure its filename\n" +
+            "  matches the 'tfc_jar_name' property in gradle.properties (currently: ${tfc_jar_name}).\n" +
+            "  Either rename the jar to match, or edit that property to match the jar you have."
+        )
+    }
+    compileOnly files(tfcJar)
+
+    // OPTIONAL: Cloth Config, compile-only so we can build the fancy settings screen against its
+    // API. At runtime it's optional (see neoforge.mods.toml) - the mod falls back to NeoForge's
+    // built-in ConfigurationScreen when Cloth isn't installed.
+    //   curse.maven:cloth-config-348521:5729126  ==  Cloth Config v15.0.140 for NeoForge 1.21.1
+    // If Gradle can't resolve this, either update the file id to a current 1.21.1 NeoForge build
+    // from the Cloth CurseForge files page, or delete this line AND the client/ClothConfigScreens
+    // class AND the cloth branch in WaryPredators to ship without Cloth support.
+    compileOnly "curse.maven:cloth-config-348521:5729126"
+
+    // For actually launching `runClient` locally with TFC loaded (not required just to
+    // compile/build), also drop the same TFC jar into run/mods/ once you've run the client
+    // task the first time to create that folder - NeoForge's dev runs will pick it up from there.
+}
+
+// Expand gradle.properties values into src/main/templates/neoforge.mods.toml at build time.
+// This is what puts the version number into the mod description (and everywhere else) from a
+// single source of truth, so the version shown in the settings/mods GUI always matches the build.
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [
+        minecraft_version      : minecraft_version,
+        minecraft_version_range: minecraft_version_range,
+        neo_version            : neo_version,
+        neo_version_range      : neo_version_range,
+        loader_version_range   : loader_version_range,
+        mod_id                 : mod_id,
+        mod_name               : mod_name,
+        mod_license            : mod_license,
+        mod_version            : mod_version,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
+}
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

@@ -1,0 +1,47 @@
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+# Version is intentionally NOT included in the description text (it already shows in its own field).
+# NOTE: this is intentionally ONE logical line (no hard line breaks) so the Mods screen wraps it
+# dynamically to whatever width the description box is - it will not wrap awkwardly at fixed columns.
+description = "Wary Predators makes TFC land and aquatic predators (bears, big cats, wolves/hyenas/direwolves, crocodiles) and hoofed chargers like the boar, moose, and bison wary of distant players instead of attacking on sight. Each species only considers attacking a visible player within a configurable provoke distance, and wary animals like wolves usually decline and may break off. Predators still fight back instantly if you strike them, and still finish a fight they have started. Fully configurable per species in the settings screen."
+logoFile = "logo.png"
+authors = "CrowsAmbit"
+
+[[dependencies.${mod_id}]]
+    modId = "neoforge"
+    type = "required"
+    versionRange = "${neo_version_range}"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.${mod_id}]]
+    modId = "minecraft"
+    type = "required"
+    versionRange = "${minecraft_version_range}"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.${mod_id}]]
+    modId = "tfc"
+    type = "required"
+    versionRange = "[4.2.5,)"
+    ordering = "AFTER"
+    side = "BOTH"
+
+# Cloth Config is an OPTIONAL enhancement to the settings screen. Declared optional so the mod
+# loads with or without it. Remove this block if you drop the Cloth integration entirely.
+[[dependencies.${mod_id}]]
+    modId = "cloth_config"
+    type = "optional"
+    versionRange = "*"
+    ordering = "AFTER"
+    side = "CLIENT"
+
+[[mixins]]
+    config = "warypredators.mixins.json"

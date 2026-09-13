@@ -1,0 +1,27 @@
+# Gradle output and local caches
+.gradle/
+build/
+repo/
+
+# IntelliJ IDEA project state
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Local Minecraft development runtime
+run/
+runs/
+
+# Locally supplied compile-time dependencies
+libs/*.jar
+
+# Logs and crash reports
+*.log
+crash-reports/
+
+# macOS metadata
+.DS_Store
+__MACOSX/
+
