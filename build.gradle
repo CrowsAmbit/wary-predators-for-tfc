@@ -113,11 +113,11 @@ dependencies {
     // OPTIONAL: Cloth Config, compile-only so we can build the fancy settings screen against its
     // API. At runtime it's optional (see neoforge.mods.toml) - the mod falls back to NeoForge's
     // built-in ConfigurationScreen when Cloth isn't installed.
-    //   curse.maven:cloth-config-348521:5729126  ==  Cloth Config v15.0.140 for NeoForge 1.21.1
+    //   curse.maven:cloth-config-348521:5729127  ==  Cloth Config v15.0.140 for NeoForge 1.21.1
     // If Gradle can't resolve this, either update the file id to a current 1.21.1 NeoForge build
     // from the Cloth CurseForge files page, or delete this line AND the client/ClothConfigScreens
     // class AND the cloth branch in WaryPredators to ship without Cloth support.
-    compileOnly "curse.maven:cloth-config-348521:5729126"
+    compileOnly "curse.maven:cloth-config-348521:5729127"
 
     // For actually launching `runClient` locally with TFC loaded (not required just to
     // compile/build), also drop the same TFC jar into run/mods/ once you've run the client
