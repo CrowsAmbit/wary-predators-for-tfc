@@ -74,7 +74,7 @@ src/main/resources/warypredators.mixins.json
 
 1. **Wrapper:** open the folder in IntelliJ as a Gradle project and use the committed Gradle
    wrapper. From a terminal, invoke it with `./gradlew`.
-2. **TFC jar:** drop `TerraFirmaCraft-NeoForge-1_21_1-4_2_6.jar` into `libs/` (name must match
+2. **TFC jar:** drop `TerraFirmaCraft-NeoForge-1.21.1-4.2.11.jar` into `libs/` (name must match
    `tfc_jar_name` in `gradle.properties`). `compileOnly` - not bundled.
 3. **Cloth (optional):** `build.gradle` pulls Cloth Config `compileOnly` via CurseMaven for the
    optional screen. If that file id ever fails to resolve, update it from Cloth's CurseForge files
@@ -101,3 +101,15 @@ src/main/resources/warypredators.mixins.json
   break off. Over many encounters, attacks should feel rare.
 - Walk near a boar - should ram far more readily than a wolf, but not literally on sight from across
   the render distance.
+
+## Passive defense compatibility
+
+Defensive bursts temporarily suspend livestock panic, avoidance, breeding and temptation;
+movement, looking and swimming remain active. Normal TFC AI resumes when the burst ends.
+Existing config keys and defaults are preserved: enable Passive Defense and the species toggle;
+babies and animals at or above the familiarity threshold do not defend.
+
+For TFC 4.2.11 validation, test cow, yak, musk ox, goat and pig in survival: melee and
+thrown-spear hits, pursuit from beyond 2.2 blocks, repeated hits extending the burst,
+and return to normal behavior after expiry. Also check master/species toggles, babies,
+familiarity below/at the threshold, and a hit while already fleeing or being tempted.

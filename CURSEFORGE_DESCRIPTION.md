@@ -50,3 +50,15 @@ Everything is adjustable from the in-game settings screen, with friendly names a
 Built for TerraFirmaCraft on NeoForge 1.21.1. Drop it in alongside TFC and you are good to go. It only touches how these animals decide to attack you, so it plays nicely with the rest of your pack.
 
 Give the wildlife a little respect, and it just might return the favor. Most of the time.
+
+## Passive defense compatibility
+
+Defensive bursts temporarily suspend livestock panic, avoidance, breeding and temptation;
+movement, looking and swimming remain active. Normal TFC AI resumes when the burst ends.
+Existing config keys and defaults are preserved: enable Passive Defense and the species toggle;
+babies and animals at or above the familiarity threshold do not defend.
+
+For TFC 4.2.11 validation, test cow, yak, musk ox, goat and pig in survival: melee and
+thrown-spear hits, pursuit from beyond 2.2 blocks, repeated hits extending the burst,
+and return to normal behavior after expiry. Also check master/species toggles, babies,
+familiarity below/at the threshold, and a hit while already fleeing or being tempted.

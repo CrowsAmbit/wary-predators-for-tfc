@@ -6,7 +6,8 @@
   "mixins": [
     "PredatorAiMixin",
     "PredatorBreakOffMixin",
-    "PrepareRamMixin"
+    "PrepareRamMixin",
+    "LivestockDefenseMixin"
   ],
   "client": [],
   "server": []
