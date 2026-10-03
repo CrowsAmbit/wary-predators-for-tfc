@@ -82,17 +82,6 @@ src/main/resources/warypredators.mixins.json
    `WaryPredators.java` to build without it.
 4. Run the `build` task -> `build/libs/warypredators-<version>.jar`.
 
-## Flagged for your review (couldn't compile-test here)
-
-- **`@Mod` constructor** now takes `(IEventBus, ModContainer, Dist)`. If NeoForge on your toolchain
-  injects a different set, match burnttfc's working @Mod class.
-- **Cloth screen** (`ClothConfigScreens`) is written against Cloth's documented API, not a local
-  compile (I can't fetch the Cloth jar in my environment). Give it a once-over in IntelliJ. It's
-  fully optional - if it fights you, delete it and the mod still ships with NeoForge's own screen.
-- **logo.png is a rough placeholder** (a wary-wolf badge). Replace with a real logo when you have one.
-- **Boar tuning** and the wolf wariness numbers are first-pass; treat the first in-game session as
-  balance tuning as usual.
-
 ## Testing suggestions
 
 - Approach a grizzly from just outside 8 blocks (no aggro) then cross inside (aggro).
@@ -108,8 +97,3 @@ Defensive bursts temporarily suspend livestock panic, avoidance, breeding and te
 movement, looking and swimming remain active. Normal TFC AI resumes when the burst ends.
 Existing config keys and defaults are preserved: enable Passive Defense and the species toggle;
 babies and animals at or above the familiarity threshold do not defend.
-
-For TFC 4.2.11 validation, test cow, yak, musk ox, goat and pig in survival: melee and
-thrown-spear hits, pursuit from beyond 2.2 blocks, repeated hits extending the burst,
-and return to normal behavior after expiry. Also check master/species toggles, babies,
-familiarity below/at the threshold, and a hit while already fleeing or being tempted.
