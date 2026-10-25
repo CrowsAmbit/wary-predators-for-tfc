@@ -64,6 +64,13 @@ public final class WaryPredatorsConfig {
     public static final ModConfigSpec.DoubleValue DEFAULT_ATTACK_CHANCE;
     public static final ModConfigSpec.DoubleValue DEFAULT_BREAK_OFF_CHANCE;
 
+    public static final ModConfigSpec.BooleanValue WARNINGS_ENABLED;
+    public static final ModConfigSpec.DoubleValue WARNING_SECONDS;
+    public static final ModConfigSpec.BooleanValue RETREAT_ENABLED;
+    public static final ModConfigSpec.DoubleValue RETREAT_MARGIN;
+    public static final ModConfigSpec.DoubleValue RETREAT_SECONDS;
+    public static final ModConfigSpec.DoubleValue RETALIATION_SECONDS;
+
     // ---- Rammers (RammingPrey: boar, moose, wildebeest, bison) ------------------------------
     // These use a different AI path than predators (they charge/ram rather than hunt), so they get
     // their own settings: a shared enable toggle, a fallback default, and per-species distance/chance.
@@ -152,6 +159,19 @@ public final class WaryPredatorsConfig {
             .comment("Fallback per-second chance (0.0-1.0) to disengage from a player mid-hunt. 0 disables.")
             .translation("warypredators.config.default_break_off_chance")
             .defineInRange("defaultBreakOffChance", 0.0, 0.0, 1.0);
+
+        WARNINGS_ENABLED = builder.comment("Pause and play the species' attack sound before an unprovoked attack on a player.")
+            .translation("warypredators.config.warnings_enabled").define("warningsEnabled", true);
+        WARNING_SECONDS = builder.comment("Warning duration in seconds. Damage immediately bypasses the warning.")
+            .translation("warypredators.config.warning_seconds").defineInRange("warningSeconds", 2.0, 0.0, 10.0);
+        RETREAT_ENABLED = builder.comment("End an unprovoked player hunt after the player withdraws beyond provoke distance plus the margin.")
+            .translation("warypredators.config.retreat_enabled").define("retreatEnabled", true);
+        RETREAT_MARGIN = builder.comment("Extra blocks beyond the species' provoke distance needed to end a hunt.")
+            .translation("warypredators.config.retreat_margin").defineInRange("retreatMargin", 6.0, 1.0, 64.0);
+        RETREAT_SECONDS = builder.comment("Seconds continuously outside the retreat distance before disengaging.")
+            .translation("warypredators.config.retreat_seconds").defineInRange("retreatSeconds", 2.0, 0.0, 30.0);
+        RETALIATION_SECONDS = builder.comment("Seconds after a successful hit during which warnings, retreat and random break-off cannot interrupt retaliation. Refreshed by hits from players or living mobs, including companion wolves.")
+            .translation("warypredators.config.retaliation_seconds").defineInRange("retaliationSeconds", 12.0, 1.0, 120.0);
 
         defineSpecies(builder, "grizzly_bear", "tfc:grizzly_bear", 6.0, 0.90, 0.02);
         defineSpecies(builder, "black_bear",   "tfc:black_bear",   4.0, 0.15, 0.05);

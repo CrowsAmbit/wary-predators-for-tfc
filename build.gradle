@@ -95,10 +95,17 @@ configurations {
 }
 
 dependencies {
-    // TFC on the compile classpath only - we mixin into its classes, but at runtime TFC
-    // is provided by the modpack itself, so we don't want to bundle or re-ship it.
+    // Optional integration tests: choose the companion build explicitly.
+    if (project.hasProperty("companionTests")) {
+        def companionJar = file(providers.gradleProperty("companion_jar").getOrElse(
+            "libs/tfc-wolf-companion-neoforge-1.21.1-0.17.0.jar"))
+        if (!companionJar.exists()) throw new GradleException("Companion test JAR not found: ${companionJar}")
+        runtimeOnly files(companionJar)
+    }
+
+    // TFC is supplied locally for compilation and development runs; never bundled.
     // Drop the jar you're building against into ./libs/ (see gradle.properties for the
-    // expected filename), matching whatever TFC build burnttfc currently compiles against.
+    // expected filename), matching the version documented in this repository.
     def tfcJar = file("libs/${tfc_jar_name}")
     if (!tfcJar.exists()) {
         throw new GradleException(
@@ -109,6 +116,8 @@ dependencies {
         )
     }
     compileOnly files(tfcJar)
+    runtimeOnly files(tfcJar)
+    runtimeOnly files("libs/Patchouli-1.21.1-93-NEOFORGE.jar")
 
     // OPTIONAL: Cloth Config, compile-only so we can build the fancy settings screen against its
     // API. At runtime it's optional (see neoforge.mods.toml) - the mod falls back to NeoForge's
@@ -170,3 +179,5 @@ idea {
         downloadJavadoc = true
     }
 }
+
+tasks.named("jar") { exclude "com/crowsambit/warypredators/WaryGameTests*"; exclude "data/warypredators/structure/arena.nbt" }

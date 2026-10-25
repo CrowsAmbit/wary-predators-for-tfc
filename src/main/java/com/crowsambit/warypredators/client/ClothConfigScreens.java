@@ -76,6 +76,31 @@ public final class ClothConfigScreens {
             .setSaveConsumer(WaryPredatorsConfig.DEFAULT_BREAK_OFF_CHANCE::set)
             .build());
 
+        predators.addEntry(eb.startBooleanToggle(Component.translatable("warypredators.config.warnings_enabled"), WaryPredatorsConfig.WARNINGS_ENABLED.get())
+            .setDefaultValue(true)
+            .setTooltip(wrapTooltip("warypredators.config.warnings_enabled.tooltip"))
+            .setSaveConsumer(WaryPredatorsConfig.WARNINGS_ENABLED::set).build());
+        predators.addEntry(eb.startDoubleField(Component.translatable("warypredators.config.warning_seconds"), WaryPredatorsConfig.WARNING_SECONDS.get())
+            .setDefaultValue(2.0).setMin(0.0).setMax(10.0)
+            .setTooltip(wrapTooltip("warypredators.config.warning_seconds.tooltip"))
+            .setSaveConsumer(WaryPredatorsConfig.WARNING_SECONDS::set).build());
+        predators.addEntry(eb.startBooleanToggle(Component.translatable("warypredators.config.retreat_enabled"), WaryPredatorsConfig.RETREAT_ENABLED.get())
+            .setDefaultValue(true)
+            .setTooltip(wrapTooltip("warypredators.config.retreat_enabled.tooltip"))
+            .setSaveConsumer(WaryPredatorsConfig.RETREAT_ENABLED::set).build());
+        predators.addEntry(eb.startDoubleField(Component.translatable("warypredators.config.retreat_margin"), WaryPredatorsConfig.RETREAT_MARGIN.get())
+            .setDefaultValue(6.0).setMin(1.0).setMax(64.0)
+            .setTooltip(wrapTooltip("warypredators.config.retreat_margin.tooltip"))
+            .setSaveConsumer(WaryPredatorsConfig.RETREAT_MARGIN::set).build());
+        predators.addEntry(eb.startDoubleField(Component.translatable("warypredators.config.retreat_seconds"), WaryPredatorsConfig.RETREAT_SECONDS.get())
+            .setDefaultValue(2.0).setMin(0.0).setMax(30.0)
+            .setTooltip(wrapTooltip("warypredators.config.retreat_seconds.tooltip"))
+            .setSaveConsumer(WaryPredatorsConfig.RETREAT_SECONDS::set).build());
+        predators.addEntry(eb.startDoubleField(Component.translatable("warypredators.config.retaliation_seconds"), WaryPredatorsConfig.RETALIATION_SECONDS.get())
+            .setDefaultValue(12.0).setMin(1.0).setMax(120.0)
+            .setTooltip(wrapTooltip("warypredators.config.retaliation_seconds.tooltip"))
+            .setSaveConsumer(WaryPredatorsConfig.RETALIATION_SECONDS::set).build());
+
         addSpecies(eb, predators, "grizzly_bear", WaryPredatorsConfig.forEntityByName("grizzly_bear"));
         addSpecies(eb, predators, "black_bear",   WaryPredatorsConfig.forEntityByName("black_bear"));
         addSpecies(eb, predators, "polar_bear",   WaryPredatorsConfig.forEntityByName("polar_bear"));
