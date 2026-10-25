@@ -8,6 +8,13 @@ per-species, in-game-configurable behavior.
 - **Required dependency:** TerraFirmaCraft
 - **License:** MIT
 
+## Release status
+
+- **Current public release: 0.1.5**, available on CurseForge.
+- `main` contains the 0.1.5 source baseline, including the TFC 4.2.11 passive-livestock retaliation fix.
+- Warning/withdrawal changes and `0.1.6-test.1` are development work, not public releases.
+- The older GitHub 0.1.4 release is retained as historical release material.
+
 ## What changed vs. vanilla TFC
 
 TFC predators attack any *visible* player immediately - no distance or provocation check
