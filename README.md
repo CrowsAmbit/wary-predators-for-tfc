@@ -10,10 +10,9 @@ per-species, in-game-configurable behavior.
 
 ## Release status
 
-- **Current public release: 0.1.5**, available on CurseForge.
-- `main` contains the 0.1.5 source baseline, including the TFC 4.2.11 passive-livestock retaliation fix.
-- Warning/withdrawal changes and `0.1.6-test.1` are development work, not public releases.
-- The older GitHub 0.1.4 release is retained as historical release material.
+- Current public release: **0.1.5**, available on CurseForge and recorded on GitHub.
+- This branch prepares **0.1.6-test.2** for testing; it is not a stable release.
+- The warning and withdrawal defaults below apply to this development branch.
 
 ## What changed vs. vanilla TFC
 
@@ -23,12 +22,13 @@ TFC predators attack any *visible* player immediately - no distance or provocati
 - **Distance gate** - a predator only *considers* a merely-visible player once they're within a
   per-species provoke distance.
 - **Attack chance** - within that distance, it commits only with a per-species probability. On a
-  failed roll it's pacified toward that player for ~15s (it "sized you up and moved on") instead
+  failed roll it's temporarily pacified (animal-wide, including in multiplayer) for ~15s (it "sized you up and moved on") instead
   of re-rolling every tick. This is what makes a wolf usually ignore a nearby player.
 - **Break-off** - while hunting a *player*, a per-second chance to lose interest and disengage
   ("investigative attack, not pressed" - real wary-predator behavior).
-- **Untouched:** getting hit always provokes instantly at any range (via `Predator.hurt`), and
-  animal-vs-animal hunting is left to TFC.
+- **Retaliation:** successful player hits, including projectiles, provoke immediately. A
+  configurable protection period prevents this mod from interrupting retaliation.
+  Animal-vs-animal hunting remains TFC-controlled.
 
 Covers bears, cougar/panther/lion/sabertooth/tiger, wolf/hyena/direwolf, crocodile, **and the boar**.
 
@@ -89,6 +89,17 @@ src/main/resources/warypredators.mixins.json
    `WaryPredators.java` to build without it.
 4. Run the `build` task -> `build/libs/warypredators-<version>.jar`.
 
+## Flagged for your review (couldn't compile-test here)
+
+- **`@Mod` constructor** now takes `(IEventBus, ModContainer, Dist)`. If NeoForge on your toolchain
+  injects a different set, match burnttfc's working @Mod class.
+- **Cloth screen** (`ClothConfigScreens`) is written against Cloth's documented API, not a local
+  compile (I can't fetch the Cloth jar in my environment). Give it a once-over in IntelliJ. It's
+  fully optional - if it fights you, delete it and the mod still ships with NeoForge's own screen.
+- **logo.png is a rough placeholder** (a wary-wolf badge). Replace with a real logo when you have one.
+- **Boar tuning** and the wolf wariness numbers are first-pass; treat the first in-game session as
+  balance tuning as usual.
+
 ## Testing suggestions
 
 - Approach a grizzly from just outside 8 blocks (no aggro) then cross inside (aggro).
@@ -104,3 +115,21 @@ Defensive bursts temporarily suspend livestock panic, avoidance, breeding and te
 movement, looking and swimming remain active. Normal TFC AI resumes when the burst ends.
 Existing config keys and defaults are preserved: enable Passive Defense and the species toggle;
 babies and animals at or above the familiarity threshold do not defend.
+
+For TFC 4.2.11 validation, test cow, yak, musk ox, goat and pig in survival: melee and
+thrown-spear hits, pursuit from beyond 2.2 blocks, repeated hits extending the burst,
+and return to normal behavior after expiry. Also check master/species toggles, babies,
+familiarity below/at the threshold, and a hit while already fleeing or being tempted.
+
+
+## 0.1.6-test.2 — Predator encounters
+
+Predators now identify the player responsible for a successful projectile hit, even outside their provoke distance. Unprovoked predator attacks begin with a two-second pause and the species' existing attack sound. Backing outside the species' provoke distance during this warning ends the encounter. There is no new warning animation or audio asset.
+
+Once a hunt begins, staying beyond the provoke distance plus six blocks for two seconds causes the predator to disengage, followed by a 15-second pacification. Hits protect retaliation from warning delays, withdrawal and random break-off for 12 seconds, refreshed by subsequent hits. After that window, normal disengagement rules resume. These controls are global predator settings; existing per-species distances and chances remain unchanged. Rammers and livestock retain their existing systems.
+
+Wolf Companion: warnings do not set an attack target, so Audrey's existing threat detection can allow a peaceful retreat. A committed attack on the player remains a threat. A successful hit from Audrey protects the animal's retaliation too, and does not reassign her attack to her owner. This prevents using withdrawal to pacify a predator while Audrey is fighting it. No Wolf Companion dependency or changes to its JAR are required.
+
+Existing configs retain their keys and values. New settings default to enabled warnings and withdrawal; either can be disabled under Predators. The predator master toggle disables all these additions, including the projectile retaliation fix.
+
+Warning chance is rolled before the pause, so an animal that declines to attack does not warn. All predator species use the global warning duration in this candidate, including cats, crocodiles and polar bears. Pacification is animal-wide, not specific to one player. Pack followers retain TFC alpha-target behavior; coordinated pack-wide disengagement is not implemented.

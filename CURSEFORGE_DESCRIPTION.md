@@ -62,3 +62,16 @@ For TFC 4.2.11 validation, test cow, yak, musk ox, goat and pig in survival: mel
 thrown-spear hits, pursuit from beyond 2.2 blocks, repeated hits extending the burst,
 and return to normal behavior after expiry. Also check master/species toggles, babies,
 familiarity below/at the threshold, and a hit while already fleeing or being tempted.
+
+
+## 0.1.6-test.2 — Predator encounters
+
+Predators now identify the player responsible for a successful projectile hit, even outside their provoke distance. Unprovoked predator attacks begin with a two-second pause and the species' existing attack sound. Backing outside the species' provoke distance during this warning ends the encounter. There is no new warning animation or audio asset.
+
+Once a hunt begins, staying beyond the provoke distance plus six blocks for two seconds causes the predator to disengage, followed by a 15-second pacification. Hits protect retaliation from warning delays, withdrawal and random break-off for 12 seconds, refreshed by subsequent hits. After that window, normal disengagement rules resume. These controls are global predator settings; existing per-species distances and chances remain unchanged. Rammers and livestock retain their existing systems.
+
+Wolf Companion: warnings do not set an attack target, so Audrey's existing threat detection can allow a peaceful retreat. A committed attack on the player remains a threat. A successful hit from Audrey protects the animal's retaliation too, and does not reassign her attack to her owner. This prevents using withdrawal to pacify a predator while Audrey is fighting it. No Wolf Companion dependency or changes to its JAR are required.
+
+Existing configs retain their keys and values. New settings default to enabled warnings and withdrawal; either can be disabled under Predators. The predator master toggle disables all these additions, including the projectile retaliation fix.
+
+Warning chance is rolled before the pause, so an animal that declines to attack does not warn. All predator species use the global warning duration in this candidate, including cats, crocodiles and polar bears. Pacification is animal-wide, not specific to one player. Pack followers retain TFC alpha-target behavior; coordinated pack-wide disengagement is not implemented.
