@@ -25,3 +25,6 @@ crash-reports/
 .DS_Store
 __MACOSX/
 
+
+# Isolated sandbox build cache
+.gradle-user/

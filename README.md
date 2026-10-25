@@ -97,3 +97,23 @@ Defensive bursts temporarily suspend livestock panic, avoidance, breeding and te
 movement, looking and swimming remain active. Normal TFC AI resumes when the burst ends.
 Existing config keys and defaults are preserved: enable Passive Defense and the species toggle;
 babies and animals at or above the familiarity threshold do not defend.
+
+
+## Warning and retreat (development)
+
+Black bears, grizzlies, wolves, hyenas and direwolves now pause and face a nearby
+player for three seconds before the existing attack-chance roll. An existing ambient
+call plays once at the start; this is not a new growl asset or animation. Move at least
+1.5 blocks farther from the animal than when the warning began, or break line of
+sight, to de-escalate. The animal then receives the existing 15-second pacification.
+Remaining close allows the normal species attack probability to decide the outcome.
+Attacking bypasses the warning through TFC's existing retaliation path.
+
+Each predator species has a new Warning Duration setting (0–15 seconds) in both
+configuration screens. Zero restores immediate consideration. Cats, crocodiles and
+polar bears default to zero. Existing keys and probability defaults are retained;
+upgrading introduces the warning delay for the five species listed above. Rammers
+and livestock are unaffected. Encounters are transient and restart after unloading.
+Pacification uses TFC's existing animal-wide PACIFIED memory, including in multiplayer.
+
+This implementation is awaiting TFC 4.2.11 development-client validation.

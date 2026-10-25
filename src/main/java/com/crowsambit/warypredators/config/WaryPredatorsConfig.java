@@ -41,6 +41,8 @@ public final class WaryPredatorsConfig {
         public final ModConfigSpec.DoubleValue provokeDistance;
         public final ModConfigSpec.DoubleValue attackChance;
         public final ModConfigSpec.DoubleValue breakOffChance;
+        public ModConfigSpec.DoubleValue warningSeconds;
+        public double warningSecondsDefault;
         // Defaults captured at definition time (ModConfigSpec.DoubleValue has no getDefault()).
         public final double provokeDistanceDefault;
         public final double attackChanceDefault;
@@ -298,8 +300,19 @@ public final class WaryPredatorsConfig {
             .comment("Per-second chance (0.0-1.0) to break off an attack on a player mid-hunt. 0 disables.")
             .translation("warypredators.config." + name + ".break_off_chance")
             .defineInRange("breakOffChance", breakOff, 0.0, 1.0);
+        double warningDefault = switch (name) {
+            case "black_bear", "grizzly_bear", "wolf", "hyena", "direwolf" -> 3.0;
+            default -> 0.0;
+        };
+        ModConfigSpec.DoubleValue warning = builder
+            .comment("Warning duration in seconds before considering an unprovoked attack. 0 restores immediate consideration. Retreat 1.5 blocks from the encounter distance to de-escalate.")
+            .translation("warypredators.config." + name + ".warning_seconds")
+            .defineInRange("warningSeconds", warningDefault, 0.0, 15.0);
         builder.pop();
-        SPECIES.put(name, new Species(entityId, d, a, b, dist, chance, breakOff));
+        Species species = new Species(entityId, d, a, b, dist, chance, breakOff);
+        species.warningSeconds = warning;
+        species.warningSecondsDefault = warningDefault;
+        SPECIES.put(name, species);
     }
 
     /** Look up a species' config values by its short config name (used by the Cloth screen). */

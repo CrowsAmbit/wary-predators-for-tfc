@@ -196,6 +196,11 @@ public final class ClothConfigScreens {
             .setTooltip(wrapTooltip("warypredators.config." + name + ".break_off_chance.tooltip"))
             .setSaveConsumer(s.breakOffChance::set)
             .build());
+        sub.add(eb.startDoubleField(
+                Component.translatable("warypredators.config.field.warning_seconds"), s.warningSeconds.get())
+            .setDefaultValue(s.warningSecondsDefault).setMin(0.0).setMax(15.0)
+            .setTooltip(wrapTooltip("warypredators.config.warning_seconds.tooltip"))
+            .setSaveConsumer(s.warningSeconds::set).build());
         cat.addEntry(sub.build());
     }
 

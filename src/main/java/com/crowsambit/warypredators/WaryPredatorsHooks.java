@@ -59,6 +59,11 @@ public final class WaryPredatorsHooks {
             return;
         }
 
+        if (WaryWarningHooks.gate(predator, player)) {
+            cir.setReturnValue(Optional.empty());
+            return;
+        }
+
         // Chance gate. On failure, pacify toward the player for a while instead of re-rolling each tick.
         double chance = WaryPredatorsConfig.attackChance(type);
         if (chance < 1.0 && predator.getRandom().nextDouble() >= chance) {
@@ -74,6 +79,7 @@ public final class WaryPredatorsHooks {
      * per-tick) and disengage on success.
      */
     public static void tickBreakOff(Predator predator) {
+        WaryWarningHooks.tick(predator);
         if (!WaryPredatorsConfig.PREDATORS_ENABLED.get()) return;   // feature off -> vanilla, never break off
 
         double perSecond = WaryPredatorsConfig.breakOffChance(predator.getType());
